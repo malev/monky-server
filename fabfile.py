@@ -41,7 +41,11 @@ def nodejs():
 
 
 def ruby():
-    install(['build-essential', 'libssl-dev'])
+    install([
+        'build-essential', 'libssl-dev', 'autoconf', 'bison',
+        'libyaml-dev', 'libreadline6', 'libreadline6-dev',
+        'zlib1g', 'zlib1g-dev'])
+
     run('git clone https://github.com/sstephenson/rbenv.git ~/.rbenv')
     run("echo 'export PATH=\"$HOME/.rbenv/bin:$PATH\"' >> ~/.bashrc")
     run("echo 'eval \"$(rbenv init -)\"' >> ~/.bashrc")
