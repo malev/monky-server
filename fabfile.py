@@ -10,6 +10,14 @@ def run_rbenv(cad):
     run('PATH="$HOME/.rbenv/bin:$PATH" ' + cad)
 
 
+def dot_files():
+    install(['exuberant-ctags', 'ack-grep'])
+    run('git clone https://github.com/malev/dotfiles.git')
+    run('ln -s ~/dotfiles/vimrc ~/.vimrc')
+    run('ln -s ~/dotfiles/tmux.conf ~/.tmux.conf')
+    run('ln -s ~/dotfiles/gitconfig ~/.gitconfig')
+
+
 def freeling():
     dependencies = [
         'libxml2-dev', 'libxslt1-dev', 'libicu-dev', 'libboost-all-dev',
