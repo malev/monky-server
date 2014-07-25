@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Fabric recipe for Analice.me
 
 > pip install fabric
@@ -20,3 +21,9 @@ And FREELING!!!!!
 * Add recipes for other stuff.
 
 http://code.tutsplus.com/tutorials/setting-up-a-rails-server-and-deploying-with-capistrano-on-fedora-from-scratch--net-10443
+=======
+monky-server
+============
+
+Fabfile for analice.me
+>>>>>>> d64101875ee48cfd657e18e2a052a0f06fe6d953
