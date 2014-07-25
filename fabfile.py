@@ -1,12 +1,14 @@
 import os
-from fabric.api import run, settings
+from fabric.api import run, settings, sudo
 
 
 def install(dependencies):
     run('sudo apt-get install -y ' + ' '.join(dependencies))
 
+
 def run_rbenv(cad):
     run('PATH="$HOME/.rbenv/bin:$PATH" ' + cad)
+
 
 def freeling():
     dependencies = [
@@ -16,19 +18,18 @@ def freeling():
     ]
     install(dependencies)
     run('wget http://devel.cpl.upc.edu/freeling/downloads/32')
+    run('mv 32 freeling.tar.gz')
     run('tar xvzf freeling.tar.gz')
-    run('cd freeling-3.1')
-    run('./configure')
-    run('make')
-    run('sudo make install')
+    run('cd freeling-3.1 && ./configure')
+    run('cd freeling-3.1 && make')
+    sudo('cd freeling-3.1 && make install')
 
 
 def nodejs():
     run('git clone https://github.com/creationix/nvm.git ~/.nvm')
     run("echo 'source ~/.nvm/nvm.sh' >> .bashrc")
-    run('source ~/.nvm/nvm.sh')
-    run('nvm install 0.10')
-    run('nvm alias default 0.10')
+    run('source ~/.nvm/nvm.sh && nvm install 0.10')
+    run('&& nvm alias default 0.10')
 
 
 def ruby():
@@ -55,7 +56,7 @@ def elasticsearch():
 
 
 def remove_user(username="deploy"):
-    run('sudo userdel -r ' + username)
+    sudo('userdel -r ' + username)
 
 
 def create_user(username="deploy"):
@@ -79,7 +80,9 @@ def basic_packages():
 
 
 def closing_ssh():
-    pass
+    sudo("sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config")
+    sudo("sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config")
+    sudo('service ssh restart')
 
 
 def first_steps(user="deploy"):
