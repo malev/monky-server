@@ -37,7 +37,7 @@ def nodejs():
     run('git clone https://github.com/creationix/nvm.git ~/.nvm')
     run("echo 'source ~/.nvm/nvm.sh' >> .bashrc")
     run('source ~/.nvm/nvm.sh && nvm install 0.10')
-    run('&& nvm alias default 0.10')
+    run('source ~/.nvm/nvm.sh && nvm alias default 0.10')
 
 
 def ruby():
