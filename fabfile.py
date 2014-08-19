@@ -109,6 +109,12 @@ def closing_ssh():
     sudo("sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config")
     sudo('service ssh restart')
 
+def docsplit():
+    dependencies = [
+        'graphicsmagick', 'poppler-utils', 'poppler-data', 'ghostscript',
+        'pdftk', 'libreoffice'
+    ]
+    install(dependencies)
 
 def first_steps(user="deploy"):
     run('apt-get update -y')
