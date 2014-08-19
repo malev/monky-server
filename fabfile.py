@@ -116,9 +116,14 @@ def docsplit():
     ]
     install(dependencies)
 
-def first_steps(user="deploy"):
+
+def update():
     run('apt-get update -y')
     run('apt-get upgrade -y')
+
+
+def first_steps(user="deploy"):
+    update()
     basic_packages()
     elasticsearch()
     create_user(user)
