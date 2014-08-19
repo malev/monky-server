@@ -18,12 +18,21 @@ def dot_files():
     run('ln -s ~/dotfiles/gitconfig ~/.gitconfig')
 
 
-def freeling():
+def freeling_trunk():
     dependencies = [
         'libxml2-dev', 'libxslt1-dev', 'libicu-dev', 'libboost-all-dev',
-        'zlib1g-dev', 'graphicsmagick', 'poppler-utils', 'poppler-data',
-        'ghostscript', 'pdftk', 'libreoffice', 'libboost-thread-dev'
+        'zlib1g-dev', 'libboost-thread-dev', 'automake', 'autoconf', 'libtool'
     ]
+    install(dependencies)
+    run('svn checkout http://devel.cpl.upc.edu/freeling/svn/versions/freeling-3.1 freeling-3.1')
+    run('cd freeling-3.1 && aclocal; libtoolize; autoconf; automake -a')
+    run('cd freeling-3.1 && ./configure')
+    run('cd freeling-3.1 && make')
+    sudo('cd freeling-3.1 && make install')
+
+
+def freeling():
+    dependencies = ['libxml2-dev', 'libxslt1-dev', 'libicu-dev', 'zlib1g-dev', 'libboost-all-dev', 'libboost-thread-dev']
     install(dependencies)
     run('wget http://devel.cpl.upc.edu/freeling/downloads/32')
     run('mv 32 freeling.tar.gz')
