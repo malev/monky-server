@@ -100,7 +100,7 @@ def create_user(username="deploy"):
 def basic_packages():
     dependencies = [
         'build-essential', 'git-core', 'mongodb', 'mongodb-server',
-        'redis-server', 'libxml2-dev', 'libxslt1-dev']
+        'redis-server', 'libxml2-dev', 'libxslt1-dev', 'subversion']
     install(dependencies)
 
 
