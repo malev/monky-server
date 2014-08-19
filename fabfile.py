@@ -61,6 +61,8 @@ def ruby():
 
 
 def elasticsearch():
+    dependencies = ['openjdk-7-jdk', 'openjdk-7-jre', 'icedtea-7-plugin']
+    install(dependencies)
     run('wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.0.deb')
     run('dpkg -i elasticsearch-1.3.0.deb')
     run('echo "script.disable_dynamic: false" /etc/elasticsearch/elasticsearch.yml')
