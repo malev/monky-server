@@ -16,4 +16,8 @@ RUN cd /tmp/freeling-3.1 && \
     rm -rf /tmp/freeling-3.1
 
 ENV FREELINGSHARE /usr/local/share/freeling/
-RUN analyzer -f /usr/local/share/freeling/config/es.cfg --server --port 50005 --workers 1 --queue 1
+
+EXPOSE 50005
+
+ENTRYPOINT analyzer
+CMD ['-f', '/usr/local/share/freeling/config/es.cfg', '--server', '--port', '50005']
