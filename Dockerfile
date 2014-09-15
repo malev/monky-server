@@ -6,7 +6,7 @@ RUN locale-gen en_US.UTF-8
 RUN apt-get update
 RUN apt-get install -y build-essential libxml2-dev libxslt1-dev libicu-dev zlib1g-dev libboost-all-dev libboost-thread-dev
 
-ADD src/freeling-3.1.tar.gz /tmp/
+ADD http://src.codingnews.info/freeling-3.1.tar.gz /tmp/
 
 RUN ls /tmp
 RUN cd /tmp/freeling-3.1 && \
