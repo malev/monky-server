@@ -6,14 +6,14 @@ RUN locale-gen en_US.UTF-8
 RUN apt-get update
 RUN apt-get install -y build-essential libxml2-dev libxslt1-dev libicu-dev zlib1g-dev libboost-all-dev libboost-thread-dev
 
-ADD http://src.codingnews.info/freeling-3.1.tar.gz /tmp/
+ADD http://src.codingnews.info.s3-website-us-east-1.amazonaws.com/freeling-3.1.tar.gz /tmp/
 
 RUN tar xvzf /tmp/freeling-3.1.tar.gz
     cd /tmp/freeling-3.1 && \
     ./configure && \
     make && \
     make install && \
-    rm -rf /tmp/freeling-3.1
+    rm -rf /tmp/freeling-3.1*
 
 ENV FREELINGSHARE /usr/local/share/freeling/
 
