@@ -8,8 +8,8 @@ RUN apt-get install -y build-essential libxml2-dev libxslt1-dev libicu-dev zlib1
 
 ADD http://src.codingnews.info/freeling-3.1.tar.gz /tmp/
 
-RUN ls /tmp
-RUN cd /tmp/freeling-3.1 && \
+RUN tar xvzf /tmp/freeling-3.1.tar.gz
+    cd /tmp/freeling-3.1 && \
     ./configure && \
     make && \
     make install && \
