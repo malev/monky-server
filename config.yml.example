@@ -1,0 +1,5 @@
+analiceme:
+  HostName: wwww
+  User: deploy
+  Port: 22
+  IdentifyKey: ~/.ssh/myPrivateKey.key

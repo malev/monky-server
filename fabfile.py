@@ -1,8 +1,25 @@
 import os
-from fabric.api import run, settings, sudo
+import yaml
+from fabric.api import *
+from dependencies import *
+
+environment = 'staging'
+if 'ENV' in os.environ:
+    environment = os.environ['ENV']
+
+stream = open('config.yml', 'r')
+config = yaml.load(stream)
+
+env.hosts = [config[environment]['HostName']]
+env.user = config[environment]['User']
+env.key_filename = config[environment]['IdentifyKey']
+env.port = config[environment]['Port']
+
+def install(packages):
+    run('sudo apt-get install -y ' + ' '.join(packages))
 
 def swap():
-    sudo('dd if=/dev/zero of=/swapfile bs=1024 count=256k')
+    sudo('dd if=/dev/zero of=/swapfile bs=1024 count=1024k')
     sudo('mkswap /swapfile')
     sudo('swapon /swapfile')
     sudo('echo "/swapfile       none    swap    sw      0       0 " >> /etc/fstab')
@@ -11,14 +28,8 @@ def swap():
     sudo('chown root:root /swapfile')
     sudo('chmod 0600 /swapfile')
 
-
-def install(dependencies):
-    run('sudo apt-get install -y ' + ' '.join(dependencies))
-
-
 def run_rbenv(cad):
     run('PATH="$HOME/.rbenv/bin:$PATH" ' + cad)
-
 
 def dot_files():
     install(['exuberant-ctags', 'ack-grep'])
@@ -27,30 +38,29 @@ def dot_files():
     run('ln -s ~/dotfiles/tmux.conf ~/.tmux.conf')
     run('ln -s ~/dotfiles/gitconfig ~/.gitconfig')
 
+def freeling():
+    run('apt-get update')
+    run('apt-get install -y ' + ' '.join(freeling_dependencies))
+    run('wget https://s3.amazonaws.com/src.codingnews.info/freeling-3.1.tar.gz')
+    run('tar xvzf freeling-3.1.tar.gz')
+    put('files/automake_options.am', 'freeling-3.1/src/')
+    run('cd freeling-3.1 && aclocal; libtoolize; autoconf; automake -a')
+    run('cd freeling-3.1 && ./configure')
+    run('cd freeling-3.1 && make')
+    run('cd freeling-3.1 && make install')
+    run('locale-gen en_US.UTF-8')
 
-def freeling_trunk():
-    dependencies = [
-        'libxml2-dev', 'libxslt1-dev', 'libicu-dev', 'libboost-all-dev',
-        'zlib1g-dev', 'libboost-thread-dev', 'automake', 'autoconf', 'libtool'
-    ]
-    install(dependencies)
-    run('svn checkout http://devel.cpl.upc.edu/freeling/svn/versions/freeling-3.1 freeling-3.1')
+def sudo_freeling():
+    sudo('apt-get update')
+    sudo('apt-get install -y ' + ' '.join(freeling_dependencies))
+    run('wget https://s3.amazonaws.com/src.codingnews.info/freeling-3.1.tar.gz')
+    run('tar xvzf freeling-3.1.tar.gz')
+    put('files/automake_options.am', 'freeling-3.1/src/')
     run('cd freeling-3.1 && aclocal; libtoolize; autoconf; automake -a')
     run('cd freeling-3.1 && ./configure')
     run('cd freeling-3.1 && make')
     sudo('cd freeling-3.1 && make install')
-
-
-def freeling():
-    dependencies = ['libxml2-dev', 'libxslt1-dev', 'libicu-dev', 'zlib1g-dev', 'libboost-all-dev', 'libboost-thread-dev']
-    install(dependencies)
-    run('wget http://devel.cpl.upc.edu/freeling/downloads/32')
-    run('mv 32 freeling.tar.gz')
-    run('tar xvzf freeling.tar.gz')
-    run('cd freeling-3.1 && ./configure')
-    run('cd freeling-3.1 && make')
-    sudo('cd freeling-3.1 && make install')
-
+    sudo('locale-gen en_US.UTF-8')
 
 def nodejs():
     run('git clone https://github.com/creationix/nvm.git ~/.nvm')
@@ -58,13 +68,8 @@ def nodejs():
     run('source ~/.nvm/nvm.sh && nvm install 0.10')
     run('source ~/.nvm/nvm.sh && nvm alias default 0.10')
 
-
 def ruby():
-    install([
-        'build-essential', 'libssl-dev', 'autoconf', 'bison',
-        'libyaml-dev', 'libreadline6', 'libreadline6-dev',
-        'zlib1g', 'zlib1g-dev'])
-
+    install(ruby_dependencies)
     run('git clone https://github.com/sstephenson/rbenv.git ~/.rbenv')
     run("echo 'export PATH=\"$HOME/.rbenv/bin:$PATH\"' >> ~/.bashrc")
     run("echo 'eval \"$(rbenv init -)\"' >> ~/.bashrc")
@@ -78,19 +83,15 @@ def ruby():
     run('~/.rbenv/shims/gem install bundler')
     run('~/.rbenv/bin/rbenv rehash')
 
-
 def elasticsearch():
-    dependencies = ['openjdk-7-jdk', 'openjdk-7-jre', 'icedtea-7-plugin']
-    install(dependencies)
+    install(elasticsearch_dependencies)
     run('wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.0.deb')
     run('dpkg -i elasticsearch-1.3.0.deb')
     run('echo "script.disable_dynamic: false" /etc/elasticsearch/elasticsearch.yml')
     run('echo "network.bind_host: 127.0.0.1" /etc/elasticsearch/elasticsearch.yml')
 
-
 def remove_user(username="deploy"):
     sudo('userdel -r ' + username)
-
 
 def create_user(username="deploy"):
     key = ""
@@ -106,13 +107,8 @@ def create_user(username="deploy"):
     run('adduser ' + username + ' sudo')
     run('usermod -s /bin/bash ' + username)
 
-
-def basic_packages():
-    dependencies = [
-        'build-essential', 'git-core', 'mongodb', 'mongodb-server',
-        'redis-server', 'libxml2-dev', 'libxslt1-dev', 'subversion']
-    install(dependencies)
-
+def install_basic_packages():
+    install(basic_packages)
 
 def closing_ssh():
     sudo("sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config")
@@ -120,21 +116,15 @@ def closing_ssh():
     sudo('service ssh restart')
 
 def docsplit():
-    dependencies = [
-        'graphicsmagick', 'poppler-utils', 'poppler-data', 'ghostscript',
-        'pdftk', 'libreoffice'
-    ]
-    install(dependencies)
-
+    install(docsplit_dependencies)
 
 def update():
-    run('apt-get update -y')
-    run('apt-get upgrade -y')
+    sudo('apt-get update -y')
+    sudo('apt-get upgrade -y')
 
-
-def first_steps(user="deploy"):
+def hephaestus():
     update()
-    basic_packages()
-    elasticsearch()
-    create_user(user)
-    closing_ssh()
+    install(basic_packages)
+    install(docsplit_dependencies)
+    sudo_freeling()
+    ruby()

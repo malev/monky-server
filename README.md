@@ -1,17 +1,14 @@
 # Fabric recipe for Analice.me
 
-> pip install fabric
-> fab -H root@YOURSERVERIP first_steps
+Run:
 
-And you have a user named **deploy**, elasticsearch and some basic packages.
+    cp config.yml.example config.yml
 
-> fab -H deploy@YOURSERVERIP ruby
+Edit `config.yml` with your variables and then run:
 
-And you have **Ruby 2.1.2** installed with **rbenv**.
+    ENV=hephaestus fab hephaestus
 
-> fab -H deploy@YOURSERVERIP freeling
-
-And FREELING!!!!!
+to setup a new **Hephaestus** ready to use machine.
 
 ## TODO
 
@@ -22,3 +19,6 @@ And FREELING!!!!!
 ## Resources
 
 * http://code.tutsplus.com/tutorials/setting-up-a-rails-server-and-deploying-with-capistrano-on-fedora-from-scratch--net-10443
+* http://stackoverflow.com/questions/15012496/ruby-resque-redis-how-to-set-up-workers-on-different-machines
+* https://briandamaged.org/blog/?p=1675
+* http://highscalability.com/blog/2009/11/6/product-resque-githubs-distrubuted-job-queue.html
