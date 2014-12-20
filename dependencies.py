@@ -33,5 +33,6 @@ elasticsearch_dependencies = ['openjdk-7-jdk', 'openjdk-7-jre', 'icedtea-7-plugi
 basic_packages = [
     'build-essential', 'git-core', 'mongodb', 'mongodb-server',
     'redis-server', 'libxml2-dev', 'libxslt1-dev', 'subversion',
-    'monit', 'htop'
+    'monit', 'htop', 'rsync', 'nginx', 'tmux', 'exuberant-ctags', 'ack-grep',
+    'python-pip', 'python-dev'
 ]
