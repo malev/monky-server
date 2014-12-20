@@ -128,3 +128,12 @@ def hephaestus():
     install(docsplit_dependencies)
     sudo_freeling()
     ruby()
+    nodejs()
+    elasticsearch()
+
+def server():
+    update()
+    install(basic_packages)
+    ruby()
+    nodejs()
+    elasticsearch()
