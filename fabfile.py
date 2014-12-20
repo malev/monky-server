@@ -86,9 +86,9 @@ def ruby():
 def elasticsearch():
     install(elasticsearch_dependencies)
     run('wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.0.deb')
-    run('dpkg -i elasticsearch-1.3.0.deb')
-    run('echo "script.disable_dynamic: false" /etc/elasticsearch/elasticsearch.yml')
-    run('echo "network.bind_host: 127.0.0.1" /etc/elasticsearch/elasticsearch.yml')
+    sudo('dpkg -i elasticsearch-1.3.0.deb')
+    sudo('echo "script.disable_dynamic: false" /etc/elasticsearch/elasticsearch.yml')
+    sudo('echo "network.bind_host: 127.0.0.1" /etc/elasticsearch/elasticsearch.yml')
 
 def remove_user(username="deploy"):
     sudo('userdel -r ' + username)
