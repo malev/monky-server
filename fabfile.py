@@ -12,7 +12,7 @@ config = yaml.load(stream)
 
 env.hosts = [config[environment]['HostName']]
 env.user = config[environment]['User']
-env.key_filename = config[environment]['IdentifyKey']
+env.key_filename = config[environment]['IdentityFile']
 env.port = config[environment]['Port']
 
 def install(packages):
