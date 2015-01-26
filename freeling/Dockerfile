@@ -14,3 +14,12 @@ RUN aclocal; libtoolize; autoconf; automake -a
 RUN ./configure
 RUN make
 RUN make install
+
+RUN rm -rf /tmp/freeling-3.1
+ADD freeling /freeling
+
+EXPOSE 5005
+ENV FREELINGCUSTOM /freeling
+ENV FREELINGSHARE /usr/local/share/freeling/
+
+CMD analyzer -f /freeling/config/es.cfg --server --port 50005 --workers 1 --queue 1 --outf tagged --nec --noflush --inpf plain
