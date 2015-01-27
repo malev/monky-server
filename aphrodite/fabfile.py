@@ -14,7 +14,7 @@ def install(packages):
 
 def deploy():
     put('config.dat', '~/')
-    # sudo('docker pull malev/aphrodite:latest')
+    sudo('docker pull malev/aphrodite:latest')
     sudo('docker rm -f aphrodite-1')
     sudo('docker run -d -p 3001:8080 --env-file=config.dat --name=aphrodite-1 -v ~/log:/app/aphrodite/log malev/aphrodite')
     sudo('docker rm -f aphrodite-2')
