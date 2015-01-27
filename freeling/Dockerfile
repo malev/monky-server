@@ -1,25 +1,11 @@
-FROM ubuntu:14.04
+FROM malev/freeling
 MAINTAINER marcosvanetta@gmail.com
 
 RUN locale-gen en_US.UTF-8
-RUN apt-get update -q
-RUN apt-get install -y git git-core wget
-RUN apt-get install -y build-essential libicu-dev libboost1.54-all-dev libboost-regex1.54-dev libboost-regex-dev libboost-system-dev libboost-program-options-dev libboost-thread-dev zlib1g-dev automake autoconf libtool
+ADD ./freeling /freeling
 
-ADD freeling-3.1.tar.gz /tmp/
-ADD automake_options.am /tmp/freeling-3.1/src/
-
-WORKDIR /tmp/freeling-3.1
-RUN aclocal; libtoolize; autoconf; automake -a
-RUN ./configure
-RUN make
-RUN make install
-
-RUN rm -rf /tmp/freeling-3.1
-ADD freeling /freeling
-
-EXPOSE 5005
 ENV FREELINGCUSTOM /freeling
-ENV FREELINGSHARE /usr/local/share/freeling/
+ENV FREELINGSHARE /usr/local/share/freeling
 
-CMD analyzer -f /freeling/config/es.cfg --server --port 50005 --workers 1 --queue 1 --outf tagged --nec --noflush --inpf plain
+EXPOSE 50005
+CMD analyzer -f /freeling/config/es.cfg --server --port 50005 --workers 2 --queue 1 --outf tagged --nec --noflush --inpf plain
